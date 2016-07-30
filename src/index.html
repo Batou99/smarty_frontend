@@ -16,7 +16,7 @@
     <link href="img/apple-touch-startup-image-1536x2008.png" media="(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
     <link href="img/apple-touch-startup-image-1496x2048.png" media="(device-width: 768px) and (device-height: 1024px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
     
-	<title>HackerNews7</title>
+	<title>Smarty</title>
 
 	<link rel="stylesheet" href="lib/framework7.ios.css">
 	<link rel="stylesheet" href="lib/framework7.ios.colors.css">
@@ -44,21 +44,13 @@
 						<div class="left"><a href="#" class="link icon-only refresh-link refresh-home"><i class="icon icon-refresh"></i></a>
 						</div>
 						<div class="center sliding">
-							<span class="mobile-title">HackerNews7</span>
-							<span class="tablet-title">Top Stories</span>
+							<span class="mobile-title">Smarty</span>
+							<span class="tablet-title">Smarty</span>
 						</div>
 					</div>
 				</div>
 				<div class="pages">
 					<div class="page" data-page="index">
-						<!-- Search bar -->
-						<form class="searchbar searchbar-init" data-search-list=".list-block-search" data-search-in=".item-title" data-searchbar-found=".searchbar-found" data-searchbar-not-found=".searchbar-not-found">
-							<div class="searchbar-input">
-								<input type="search" placeholder="Search">
-								<a href="#" class="searchbar-clear"></a>
-							</div>
-							<a href="#" class="searchbar-cancel">Cancel</a>
-						</form>
 						<div class="page-content pull-to-refresh-content">
 							<div class="pull-to-refresh-layer">
 								<div class="preloader"></div>
@@ -88,7 +80,7 @@
 							<i class="icon icon-bars"></i>
 						</a>
 					</div>
-					<div class="center">HackerNews7</div>
+					<div class="center">Status</div>
 				</div>
 			</div>
 			<div class="pages">
@@ -102,19 +94,18 @@
 	</div>
 
 	<!-- template7 templates -->
-	<script type="text/template7" id="storiesTemplate">
+	<script type="text/template7" id="devicesTemplate">
 		<ul>
 		{{#each this}}
 			<li class="swipeout">
 				<div class="swipeout-content">
-					<a href="item.html?id={{id}}" data-context-name="stories.{{@index}}" class="item-content item-link">
+					<a href="device.html?id={{id}}" data-context-name="devices.{{@index}}" class="item-content item-link">
 						<div class="item-inner">
 							<div class="item-title-row">
-								<div class="item-title">{{title}}</div>
-								<div class="item-after"><span class="badge">{{notEmpty descendants}}</span></div>
-                        	</div>
-							<div class="item-subtitle">{{domain}}</div>
-				        	<div class="item-text">{{score}} points by {{by}} {{time_ago time}}</div>
+								<div class="item-title">{{name}}</div>
+              </div>
+							<div class="item-subtitle">{{type}}
+              </div>
 						</div>
 					</a>
 				</div>
@@ -125,41 +116,89 @@
 		{{/each}}
 		</ul>
 	</script>
-	<script type="text/template7" id="commentsTemplate">
-		{{#each this}}
-			<div class="message message-received message-with-tail message-last">
-				<div class="message-name"><span class="comment-name">{{by}}</span>, <span class="comment-time">{{time_ago time}}</span></div>
-				<div class="message-text">{{text}}</div>
-			</div>
-			{{#if kids}}
-			<div class="message-kids">
-				<a href="#" data-context="{{kids}}"><i></i> show {{pluralize kids single="reply" multiple="replies"}}</a>
-			</div>
-			{{/if}}
-		{{/each}}
+	<script type="text/template7" id="deviceViewTemplate">
+    <div class="content-block-title">{{name}}</div>
+      <div class="list-block">
+        <ul class="controls">
+        </ul>
+      </div>
+    </div>
 	</script>
-	<script type="text/template7" id="repliesTemplate">
-		{{#each this}}
-			<div class="message message-received message-with-tail message-last">
-				<div class="message-name"><span class="comment-name">{{by}}</span>, <span class="comment-time">{{time_ago time}}</span></div>
-				<div class="message-text">{{text}}</div>
-			</div>
-			{{#if kids}}
-				<div class="message-kids">
-					<a href="#" data-context="{{kids}}"><i></i> show {{pluralize kids single="reply" multiple="replies"}}</a>
-				</div>
-			{{/if}}
-		{{/each}}
-	</script>
-    <script type="text/template7" id="userTemplate">
-        <div class="content-block user">
-		  <img class="user-avatar" src="img/avatar.svg" width="128px"/>
-          <h1 class="user-name">{{id}}</h1>
-          <p>HN user since {{time_ago created}}</p>
-          <h3 class="user-karma">karma : {{karma}}</h3>
-          <div class="user-about">{{about}}</div>
+	<script type="text/template7" id="buttonTemplate">
+    <li>
+      <form action="http://192.168.1.44:9292/device_control_values/{{id}}.json" class="ajax-submit-onchange" method="PUT">
+        <div class="item-content">
+          <div class="item-media"><i class="icon icon-form-toggle"></i></div>
+          <div class="item-inner"> 
+            <div class="item-title label">{{name}}</div>
+            <div class="item-input">
+              <label class="label-switch">
+                <input name="value" type="checkbox" {{checked}}>
+                <div class="checkbox"></div>
+              </label>
+            </div>
+          </div>
         </div>
-	</script>
+      </form>
+    </li>
+  </script>
+	<script type="text/template7" id="sliderTemplate">
+    <li>
+      <form action="http://192.168.1.44:9292/device_control_values/{{id}}.json" class="ajax-submit-onchange" method="PUT">
+        <div class="item-content">
+          <div class="item-media"><i class="icon icon-form-settings"></i></div>
+          <div class="item-inner">
+            <div class="item-title label">{{name}}</div>
+            <div class="item-input">
+              <div class="range-slider">
+                <input name="value" type="range" min="0" max="100" value="{{value}}" step="0.1">
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </li>
+  </script>
+	<script type="text/template7" id="selectTemplate">
+    <div class="content-block-title">{{name}}</div>
+<div class="list-block">
+  <ul>
+    <form action="http://192.168.1.44:9292/device_control_values/{{../id}}.json" class="ajax-submit-onchange" method="PUT">
+    {{#each this.possible_values}}
+    <li>
+      <label class="label-radio item-content">
+        <input class="select" type="radio" name="value" value="{{this}}" {{isChecked this ../value}}>
+        <div class="item-inner">
+          <div class="item-title">{{this}}</div>
+        </div>
+      </label>
+    </li>
+    {{/each}}
+    </form>
+  </ul>
+</div>
+  </script>
+	<script type="text/template7" id="playlistTemplate">
+    <div class="content-block-title">{{name}}</div>
+      <div class="list-block">
+        <ul>
+          {{#each this.possible_values}}
+          <li>
+            <form action="http://192.168.1.44:9292/device_control_values/{{../id}}.json" class="ajax-submit-onchange" method="PUT">
+            <label class="label-radio item-content">
+              <input class="select" type="radio" name="value" value="{{this}}" {{isChecked this ../value}}>
+              <div class="item-media"><i class="icon icon-form-checkbox"></i></div>
+              <div class="item-inner">
+                <div class="item-title">{{this}}</div>
+              </div>
+            </label>
+            </form>
+          </li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </script>
 
 	<!-- libraries -->
 	<script src="lib/moment.js"></script>
@@ -167,7 +206,7 @@
 		window.moment = (typeof moment !== 'undefined') ? moment : require('moment');
 	</script>
 	<script src="lib/framework7.js"></script>
-	<script src="js/hnapi.js"></script>
+	<script src="js/rest.js"></script>
 	<script src="js/hn7.js"></script>
 </body>
 
